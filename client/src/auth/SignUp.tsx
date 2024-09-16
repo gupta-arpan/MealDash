@@ -4,21 +4,17 @@ import { Separator } from "@/components/ui/separator";
 import { Contact2, Loader2, LockKeyhole, Mail, User } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
+import { SignupInputState, userSigupSchema } from "@/schema/userSchema";
 
-type SignUpInputState = {
-    fullName: string;
-    contact: string;
-    email: string;
-    password: string;
-}
 const SignUp = () => {
     const loading = false;
-    const [input, setInput] = useState<SignUpInputState>({
+    const [input, setInput] = useState<SignupInputState>({
         fullName: "",
         contact: "",
         email: "",
         password: "",
     })
+    const [errors, setErrors] = useState<Partial<SignupInputState>>({})
     const onChangeEventListener = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value} = e.target;
         setInput({...input, [name]: value});
@@ -26,6 +22,18 @@ const SignUp = () => {
 
     const SignUpSubmitHandler = (e:FormEvent) => {
         e.preventDefault();
+        //form validation:
+        const result = userSigupSchema.safeParse(input);
+        if(!result.success){
+            const fieldErrors = result.error.formErrors.fieldErrors;
+            setErrors(fieldErrors as Partial<SignupInputState>);
+            return;
+        }
+        else{
+            setErrors({});
+        }
+
+        //api implementation for login
         console.log(input);
     }
     return (
@@ -45,6 +53,7 @@ const SignUp = () => {
                             className="pl-10 focus-visible:ring-1"
                         />
                         <User className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none"></User>
+                        {errors && errors.fullName && <span className="text-sm text-red-500">{errors.fullName}</span> }
                     </div>
                 </div>
                 <div className="mb-4">
@@ -58,6 +67,7 @@ const SignUp = () => {
                             className="pl-10 focus-visible:ring-1"
                         />
                         <Contact2 className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none"></Contact2>
+                        {errors && errors.contact && <span className="text-sm text-red-500">{errors.contact}</span> }
                     </div>
                 </div>
                 <div className="mb-4">
@@ -71,6 +81,7 @@ const SignUp = () => {
                             className="pl-10 focus-visible:ring-1"
                         />
                         <Mail className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none"></Mail>
+                        {errors && errors.email && <span className="text-sm text-red-500">{errors.email}</span> }
                     </div>
                 </div>
                 <div className="mb-4">
@@ -84,6 +95,7 @@ const SignUp = () => {
                             className="pl-10 focus-visible:ring-1"
                         />
                         <LockKeyhole className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none"></LockKeyhole>
+                        {errors && errors.password && <span className="text-sm text-red-500">{errors.password}</span> }
                     </div>
                 </div>
                 <div className="mb-10">
