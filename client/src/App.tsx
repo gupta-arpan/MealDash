@@ -2,15 +2,22 @@ import './App.css'
 import Login from './auth/Login'
 import SignUp from './auth/SignUp'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import MainLayout from './MainLayout'
 import ForgotPassword from './auth/ForgotPassword'
 import ResetPassword from './auth/ResetPassword'
 import VerifyEmail from './auth/VerifyEmail'
+import MainLayout from './layout/MainLayout'
+import HereSection from './components/HereSection'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <MainLayout></MainLayout>
+    element: <MainLayout/>,
+    children: [
+      {
+        path: '/',
+        element: <HereSection/>
+      }
+    ]
   },
   {
     path: '/login',
