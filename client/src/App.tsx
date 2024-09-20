@@ -7,6 +7,8 @@ import ResetPassword from './auth/ResetPassword'
 import VerifyEmail from './auth/VerifyEmail'
 import MainLayout from './layout/MainLayout'
 import HereSection from './components/HereSection'
+import Profile from './components/Profile'
+import SearchPage from './components/Search'
 
 const router = createBrowserRouter([
   {
@@ -16,6 +18,14 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <HereSection/>
+      },
+      {
+        path: '/profile',
+        element: <Profile/>
+      },
+      {
+        path: '/search/:text',
+        element: <SearchPage/>
       }
     ]
   },
