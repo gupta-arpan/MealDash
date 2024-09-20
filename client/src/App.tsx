@@ -8,7 +8,13 @@ import VerifyEmail from './auth/VerifyEmail'
 import MainLayout from './layout/MainLayout'
 import HereSection from './components/HereSection'
 import Profile from './components/Profile'
-import SearchPage from './components/Search'
+import SearchPage from './components/SearchPage'
+import RestaurantDetail from './components/RestaurantDetailPage'
+import Cart from './components/Cart'
+import Restaurant from './admin/Restaurant'
+import AddMenu from './admin/AddMenu'
+import Orders from './admin/Orders'
+import Success from './components/Success'
 
 const router = createBrowserRouter([
   {
@@ -26,6 +32,30 @@ const router = createBrowserRouter([
       {
         path: '/search/:text',
         element: <SearchPage/>
+      },
+      {
+        path: '/restaurant/:id',
+        element: <RestaurantDetail/>
+      },
+      {
+        path: '/cart',
+        element: <Cart/>
+      },
+      {
+        path: '/order/status',
+        element: <Success/>
+      },
+      {
+        path: '/admin/restaurant',
+        element: <Restaurant/>
+      },
+      {
+        path: '/admin/menu',
+        element: <AddMenu/>
+      },
+      {
+        path: '/admin/orders',
+        element: <Orders/>
       }
     ]
   },
