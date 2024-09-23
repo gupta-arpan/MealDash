@@ -11,20 +11,19 @@ import { FormEvent, useRef, useState } from "react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
-//import { useUserStore } from "@/store/useUserStore";
+import { useUserStore } from "@/store/useUserStore";
 
 const Profile = () => {
-    //const {user, updateProfile} = useUserStore();
-    // const [isLoading, setIsLoading] = useState<boolean>(false);
-    const isLoading  = false;
+    const {user, updateProfile} = useUserStore();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [profileData, setProfileData] = useState({
-        fullname: "",
-        email: "arpan62308@gmail.com",
-        address: "",
-        city: "",
-        country: "",
-        profilePicture: "",
-    });
+        fullname: user?.fullname || "",
+        email: user?.email || "", 
+        address: user?.address || "",
+        city: user?.city || "",
+        country: user?.country || "",
+        profilePicture: user?.profilePicture || "",
+      });
     const imageRef = useRef<HTMLInputElement | null>(null);
     const [selectedProfilePicture, setSelectedProfilePicture] =
         useState<string>(profileData.profilePicture || "");
@@ -52,8 +51,14 @@ const Profile = () => {
 
     const updateProfileHandler = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(profileData);
-    };
+        try {
+          setIsLoading(true);
+          await updateProfile(profileData);
+          setIsLoading(false);
+        } catch (error) {
+          setIsLoading(false);
+        }
+      };
 
     return (
         <form onSubmit={updateProfileHandler} className="max-w-7xl mx-auto my-5">

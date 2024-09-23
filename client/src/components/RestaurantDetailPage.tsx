@@ -1,4 +1,4 @@
-//import { useRestaurantStore } from "@/store/useRestaurantStore";
+import { useRestaurantStore } from "@/store/useRestaurantStore";
 import AvailableMenu from "./AvailableMenu";
 import { Badge } from "./ui/badge";
 import { Timer } from "lucide-react";
@@ -7,29 +7,10 @@ import { useParams } from "react-router-dom";
 
 const RestaurantDetail = () => {
   const params = useParams();
-  //const { singleRestaurant, getSingleRestaurant } = useRestaurantStore();
-  const singleRestaurant = {
-    restaurantName: "Restaurant Name",
-    cuisines: ["Cuisine 1", "Cuisine 2"],
-    city: "City",
-    country: "Country",
-    deliveryTime: 30,
-    menus: [
-      {
-        
-      }
-    ]
-    imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-  }
-
-  const getSingleRestaurant = (id: string) => {
-    console.log(id);
-    //getSingleRestaurant(id);
-  }
+  const { singleRestaurant, getSingleRestaurant } = useRestaurantStore();
 
   useEffect(() => {
-    getSingleRestaurant(params.id!); 
-    
+    getSingleRestaurant(params.id!);   
   }, [params.id]);
 
   return (
@@ -60,7 +41,7 @@ const RestaurantDetail = () => {
             </div>
           </div>
         </div>
-       {singleRestaurant?.menus && <AvailableMenu menus = {singleRestaurant?.menus!}/>} 
+       {singleRestaurant?.menus && <AvailableMenu menus = {singleRestaurant?.menus}/>} 
       </div>
     </div>
   );

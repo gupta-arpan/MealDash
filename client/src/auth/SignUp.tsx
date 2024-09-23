@@ -3,38 +3,45 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Contact2, Loader2, LockKeyhole, Mail, User } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SignupInputState, userSigupSchema } from "@/schema/userSchema";
+import { useUserStore } from "@/store/useUserStore";
 
 const SignUp = () => {
-    const loading = false;
     const [input, setInput] = useState<SignupInputState>({
-        fullName: "",
+        fullname: "",
         contact: "",
         email: "",
         password: "",
     })
     const [errors, setErrors] = useState<Partial<SignupInputState>>({})
+    const { signup, loading } = useUserStore();
+    const navigate = useNavigate();
     const onChangeEventListener = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value} = e.target;
-        setInput({...input, [name]: value});
+        const { name, value } = e.target;
+        setInput({ ...input, [name]: value });
     }
 
-    const SignUpSubmitHandler = (e:FormEvent) => {
+    const SignUpSubmitHandler = async (e: FormEvent) => {
         e.preventDefault();
         //form validation:
         const result = userSigupSchema.safeParse(input);
-        if(!result.success){
+        if (!result.success) {
             const fieldErrors = result.error.formErrors.fieldErrors;
             setErrors(fieldErrors as Partial<SignupInputState>);
             return;
         }
-        else{
+        else {
             setErrors({});
         }
 
         //api implementation for login
-        console.log(input);
+        try {
+            await signup(input);
+            navigate("/verify-email");
+        } catch (error) {
+            console.log(error);
+        }
     }
     return (
         <div className="flex items-center justify-center min-height-screen">
@@ -47,13 +54,13 @@ const SignUp = () => {
                         <Input
                             type="text"
                             placeholder="Full Name"
-                            name = "fullName"
-                            value={input.fullName}
+                            name="fullname"
+                            value={input.fullname}
                             onChange={onChangeEventListener}
                             className="pl-10 focus-visible:ring-1"
                         />
                         <User className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none"></User>
-                        {errors && errors.fullName && <span className="text-sm text-red-500">{errors.fullName}</span> }
+                        {errors && errors.fullname && <span className="text-sm text-red-500">{errors.fullname}</span>}
                     </div>
                 </div>
                 <div className="mb-4">
@@ -61,13 +68,13 @@ const SignUp = () => {
                         <Input
                             type="text"
                             placeholder="Contact"
-                            name = "contact"
+                            name="contact"
                             value={input.contact}
                             onChange={onChangeEventListener}
                             className="pl-10 focus-visible:ring-1"
                         />
                         <Contact2 className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none"></Contact2>
-                        {errors && errors.contact && <span className="text-sm text-red-500">{errors.contact}</span> }
+                        {errors && errors.contact && <span className="text-sm text-red-500">{errors.contact}</span>}
                     </div>
                 </div>
                 <div className="mb-4">
@@ -75,13 +82,13 @@ const SignUp = () => {
                         <Input
                             type="email"
                             placeholder="Email"
-                            name = "email"
+                            name="email"
                             value={input.email}
                             onChange={onChangeEventListener}
                             className="pl-10 focus-visible:ring-1"
                         />
                         <Mail className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none"></Mail>
-                        {errors && errors.email && <span className="text-sm text-red-500">{errors.email}</span> }
+                        {errors && errors.email && <span className="text-sm text-red-500">{errors.email}</span>}
                     </div>
                 </div>
                 <div className="mb-4">
@@ -89,13 +96,13 @@ const SignUp = () => {
                         <Input
                             type="password"
                             placeholder="Password"
-                            name = "password"
+                            name="password"
                             value={input.password}
                             onChange={onChangeEventListener}
                             className="pl-10 focus-visible:ring-1"
                         />
                         <LockKeyhole className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none"></LockKeyhole>
-                        {errors && errors.password && <span className="text-sm text-red-500">{errors.password}</span> }
+                        {errors && errors.password && <span className="text-sm text-red-500">{errors.password}</span>}
                     </div>
                 </div>
                 <div className="mb-10">

@@ -14,16 +14,8 @@ import { Loader2, Plus } from "lucide-react";
 import React, { FormEvent, useState } from "react";
 import EditMenu from "./EditMenu";
 import { MenuFormSchema, menuSchema } from "@/schema/menuSchema";
-//import { useMenuStore } from "@/store/useMenuStore";
-//import { useRestaurantStore } from "@/store/useRestaurantStore";
-
-type menu = {
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-}
- 
+import { useMenuStore } from "@/store/useMenuStore";
+import { useRestaurantStore } from "@/store/useRestaurantStore";
 
 const AddMenu = () => {
   const [input, setInput] = useState<MenuFormSchema>({
@@ -34,16 +26,10 @@ const AddMenu = () => {
   });
   const [open, setOpen] = useState<boolean>(false);
   const [editOpen, setEditOpen] = useState<boolean>(false);
-  const [selectedMenu, setSelectedMenu] = useState<menu>();
+  const [selectedMenu, setSelectedMenu] = useState<any>();
   const [error, setError] = useState<Partial<MenuFormSchema>>({});
-  // const { loading, createMenu } = useMenuStore();
-  // const {restaurant} = useRestaurantStore();
-  const loading = false;
-  const restaurant = {
-    menus: [
-
-    ]
-  }
+  const { loading, createMenu } = useMenuStore();
+  const {restaurant} = useRestaurantStore();
 
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
@@ -58,20 +44,19 @@ const AddMenu = () => {
       setError(fieldErrors as Partial<MenuFormSchema>);
       return;
     }
-    // api ka kaam start from here
-    // try {
-    //   const formData = new FormData();
-    //   formData.append("name", input.name);
-    //   formData.append("description", input.description);
-    //   formData.append("price", input.price.toString());
-    //   if(input.image){
-    //     formData.append("image", input.image);
-    //   }
-    //   await createMenu(formData);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-   
+
+    try {
+      const formData = new FormData();
+      formData.append("name", input.name);
+      formData.append("description", input.description);
+      formData.append("price", input.price.toString());
+      if(input.image){
+        formData.append("image", input.image);
+      }
+      await createMenu(formData);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="max-w-6xl mx-auto my-10">
@@ -173,7 +158,7 @@ const AddMenu = () => {
           </DialogContent>
         </Dialog>
       </div>
-      {restaurant?.menus.map((menu: menu, idx: number) => (
+      {restaurant?.menus.map((menu: any, idx: number) => (
         <div key={idx} className="mt-6 space-y-4">
           <div className="flex flex-col md:flex-row md:items-center md:space-x-4 md:p-4 p-2 shadow-md rounded-lg border">
             <img
@@ -187,7 +172,7 @@ const AddMenu = () => {
               </h1>
               <p className="text-sm tex-gray-600 mt-1">{menu.description}</p>
               <h2 className="text-md font-semibold mt-2">
-                Price: <span className="text-[#D19254]">80</span>
+                Price: <span className="text-[#D19254]">{menu.price}</span>
               </h2>
             </div>
             <Button

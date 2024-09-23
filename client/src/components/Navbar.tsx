@@ -37,14 +37,13 @@ import {
     SheetTrigger,
 } from "./ui/sheet";
 import { Separator } from "./ui/separator";
-// import { useUserStore } from "@/store/useUserStore";
-// import { useCartStore } from "@/store/useCartStore";
+import { useUserStore } from "@/store/useUserStore";
+import { useCartStore } from "@/store/useCartStore";
 // import { useThemeStore } from "@/store/useThemeStore";
 
 const Navbar = () => {
-    const admin = true;
-    const loading = false;
-
+    const { user, loading, logout } = useUserStore();
+    const { cart } = useCartStore();
     return (
         <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between h-14">
@@ -57,7 +56,7 @@ const Navbar = () => {
                         <Link to="/profile" className="text-primary">Profile</Link>
                         <Link to="/order/status" className="text-primary">Order</Link>
 
-                        {admin && (
+                        {user?.admin && (
                             <Menubar>
                                 <MenubarMenu>
                                     <MenubarTrigger className="bg-white">Dashboard</MenubarTrigger>
@@ -79,7 +78,7 @@ const Navbar = () => {
                     <div className="flex items-center gap-4">
                         <div>
                             <DropdownMenu>
-                                <DropdownMenuTrigger>
+                                <DropdownMenuTrigger asChild>
                                     <Button variant="outline" size="icon">
                                         <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                                         <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
@@ -98,12 +97,12 @@ const Navbar = () => {
                                 size={"icon"}
                                 className="absolute -inset-y-3 left-2 text-xs rounded-full w-4 h-4 bg-red-500 hover:bg-red-500"
                             >
-                                {5}
+                                {cart?.length}
                             </Button>
                         </Link>
                         <div>
                             <Avatar>
-                                <AvatarImage/>
+                                <AvatarImage src={user?.profilePicture} alt="Profile Photo"/>
                                 <AvatarFallback>CN</AvatarFallback>
                             </Avatar>
                         </div>
@@ -115,6 +114,7 @@ const Navbar = () => {
                                 </Button>
                             ) : (
                                 <Button
+                                    onClick={logout}
                                     className="bg-orange hover:bg-hoverOrange"
                                 >
                                     Logout
@@ -135,8 +135,7 @@ const Navbar = () => {
 export default Navbar;
 
 const MobileNavbar = () => {
-    const admin = true;
-    const loading = false;
+    const { user, loading, logout } = useUserStore();
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -150,7 +149,7 @@ const MobileNavbar = () => {
             </SheetTrigger>
             <SheetContent className="flex flex-col">
                 <SheetHeader className="flex flex-row items-center justify-between mt-2">
-                    <SheetTitle>PatelEats</SheetTitle>
+                    <SheetTitle>MealDash</SheetTitle>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="icon">
@@ -188,7 +187,7 @@ const MobileNavbar = () => {
                         <ShoppingCart />
                         <span>Cart (0)</span>
                     </Link>
-                    {admin && (
+                    {user?.admin && (
                         <>
                             <Link
                                 to="/admin/menu"
@@ -220,7 +219,7 @@ const MobileNavbar = () => {
                             <AvatarImage/>
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
-                        <h1 className="font-bold">Patel Mernstack</h1>
+                        <h1 className="font-bold">{user?.fullname}</h1>
                     </div>
                     <SheetClose asChild>
                         {loading ? (
@@ -230,6 +229,7 @@ const MobileNavbar = () => {
                             </Button>
                         ) : (
                             <Button
+                                onClick={logout}
                                 className="bg-orange hover:bg-hoverOrange"
                             >
                                 Logout
